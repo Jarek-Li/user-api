@@ -48,5 +48,5 @@ enum IntegralSourceEnum {
     /**
     * 拉黑
     **/
-    BLACK = 3,
+    BLACK = 2,
 }
