@@ -9,7 +9,7 @@ struct RegisterUserRequest {
     /**
     * 用户名称
     **/
-    1:string userName,
+    1: string userName,
     /**
     * 密码
     **/
