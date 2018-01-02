@@ -1,0 +1,1078 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service namespace="com.today.api.user.service" name="UserService">
+    <meta>
+        <version>1.0.0</version>
+        <timeout>30000</timeout>
+    </meta>
+    <methods>
+        <method name="registerUser">
+            <doc>
+
+### 用户注册
+
+#### 业务描述
+    用户注册账户，用户密码需要加盐之后存储(加盐方案还么确定,小伙伴可以自己随意设计个简单的加解密方案)
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.RegisterUserRequest
+
+#### 前置检查
+    1. 手机号码规则验证
+    2. 手机号未被使用验证
+    3. 密码规则,字母数字八位混合
+
+####  逻辑处理
+    1.密码加盐处理
+    2.新增一条user记录
+    3.返回结果 user_response.RegisterUserResponse
+
+#### 数据库变更
+    1. insert into user() values()
+
+####  事务处理
+    无
+
+####  输出
+    1.user_response.RegisterUserResponse
+</doc>
+            <request name="registerUser_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.RegisterUserRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="registerUser_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.response.RegisterUserResponse</ref>
+                        </dataType>
+                        <doc>
+
+### 用户注册
+
+#### 业务描述
+    用户注册账户，用户密码需要加盐之后存储(加盐方案还么确定,小伙伴可以自己随意设计个简单的加解密方案)
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.RegisterUserRequest
+
+#### 前置检查
+    1. 手机号码规则验证
+    2. 手机号未被使用验证
+    3. 密码规则,字母数字八位混合
+
+####  逻辑处理
+    1.密码加盐处理
+    2.新增一条user记录
+    3.返回结果 user_response.RegisterUserResponse
+
+#### 数据库变更
+    1. insert into user() values()
+
+####  事务处理
+    无
+
+####  输出
+    1.user_response.RegisterUserResponse
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+        <method name="login">
+            <doc>
+
+### 用户登录
+
+#### 业务描述
+   用户登录
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.LoginUserRequest
+
+#### 前置检查
+    1.手机号码规则验证
+    2.密码规则,字母数字八位混合
+
+####  逻辑处理
+    1. 根据手机号码和密码查询用户记录
+    2. 异常用户状态的用户登录返回 Exception
+
+#### 数据库变更
+    1. select *  from user where telphone = ? and password = ?
+
+####  事务处理
+    无
+
+####  输出
+    1.user_response.LoginUserResponse
+</doc>
+            <request name="login_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.LoginUserRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="login_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.response.LoginUserResponse</ref>
+                        </dataType>
+                        <doc>
+
+### 用户登录
+
+#### 业务描述
+   用户登录
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.LoginUserRequest
+
+#### 前置检查
+    1.手机号码规则验证
+    2.密码规则,字母数字八位混合
+
+####  逻辑处理
+    1. 根据手机号码和密码查询用户记录
+    2. 异常用户状态的用户登录返回 Exception
+
+#### 数据库变更
+    1. select *  from user where telphone = ? and password = ?
+
+####  事务处理
+    无
+
+####  输出
+    1.user_response.LoginUserResponse
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+        <method name="modifyUser">
+            <doc>
+
+### 用户修改个人资料
+
+#### 业务描述
+   用户再注册之后完善个人资料,完善资料增加积分5
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.ModifyUserRequest
+
+#### 前置检查
+    1. 邮箱规则验证
+    2. qq 规则验证
+    3. 用户状态判断只有用户状态为
+
+####  逻辑处理
+    1. 根据输入的参数计算用户积分
+    2. 修改用户 email qq
+    2. 修改完成之后调用积分action增加用户积分(完善资料增加积分5) ChangeUserIntegralAction
+
+#### 数据库变更
+    1. update user set email = ? , qq = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.ModifyUserAction
+</doc>
+            <request name="modifyUser_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.ModifyUserRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="modifyUser_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.response.ModifyUserResponse</ref>
+                        </dataType>
+                        <doc>
+
+### 用户修改个人资料
+
+#### 业务描述
+   用户再注册之后完善个人资料,完善资料增加积分5
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.ModifyUserRequest
+
+#### 前置检查
+    1. 邮箱规则验证
+    2. qq 规则验证
+    3. 用户状态判断只有用户状态为
+
+####  逻辑处理
+    1. 根据输入的参数计算用户积分
+    2. 修改用户 email qq
+    2. 修改完成之后调用积分action增加用户积分(完善资料增加积分5) ChangeUserIntegralAction
+
+#### 数据库变更
+    1. update user set email = ? , qq = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.ModifyUserAction
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+        <method name="freezeUser">
+            <doc>
+
+### 冻结用户接口
+
+#### 业务描述
+   用户因为触犯一些游戏规则,后台自检程序或者管理员会冻结该用户
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.FreezeUserRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能冻结)
+
+####  逻辑处理
+    1. 设置用户状态为 FREEZE
+
+#### 数据库变更
+    1. update user set status = ? , remark = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.FreezeUserResponse
+</doc>
+            <request name="freezeUser_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.FreezeUserRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="freezeUser_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.response.FreezeUserResponse</ref>
+                        </dataType>
+                        <doc>
+
+### 冻结用户接口
+
+#### 业务描述
+   用户因为触犯一些游戏规则,后台自检程序或者管理员会冻结该用户
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.FreezeUserRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能冻结)
+
+####  逻辑处理
+    1. 设置用户状态为 FREEZE
+
+#### 数据库变更
+    1. update user set status = ? , remark = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.FreezeUserResponse
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+        <method name="blackUser">
+            <doc>
+
+### 拉黑用户接口
+
+#### 业务描述
+   用户因为触犯一些游戏规则,后台自检程序或者管理员会拉黑该用户,拉黑用户把用户的积分置为0
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.BlackUserRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能拉黑)
+
+####  逻辑处理
+    1. 设置用户状态为  BLACK
+    2. 调用积分修改接口 ChangeUserIntegralAction
+
+#### 数据库变更
+    1. update user set status = ? , remark = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.BlackUserResponse
+</doc>
+            <request name="blackUser_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.BlackUserRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="blackUser_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.response.BlackUserResponse</ref>
+                        </dataType>
+                        <doc>
+
+### 拉黑用户接口
+
+#### 业务描述
+   用户因为触犯一些游戏规则,后台自检程序或者管理员会拉黑该用户,拉黑用户把用户的积分置为0
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.BlackUserRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能拉黑)
+
+####  逻辑处理
+    1. 设置用户状态为  BLACK
+    2. 调用积分修改接口 ChangeUserIntegralAction
+
+#### 数据库变更
+    1. update user set status = ? , remark = ? where id = ${userId}
+
+####  事务处理
+    1. 无
+
+####  输出
+    1.user_response.BlackUserResponse
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+        <method name="changeUserIntegral">
+            <doc>
+
+### 记录积分改变流水
+
+#### 业务描述
+   用户因为完成一些游戏规则或者触犯游戏规则导致积分减少或者增加,调用该接口修改用户积分
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.ChangeIntegralRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能冻结)
+
+####  逻辑处理
+    1. 设置用户状态为 FREEZE
+
+#### 数据库变更
+    1. update user set integral = ?  where id = ${userId}
+    2. insert into integral_journal() values()
+
+####  事务处理
+    1. 无
+
+####  输出
+    1. i32 流水 Id
+</doc>
+            <request name="changeUserIntegral_args">
+                <fields>
+                    <field tag="1" name="request" optional="false" privacy="false">
+                        <dataType>
+                            <kind>STRUCT</kind>
+                            <ref>com.today.api.user.request.ChangeIntegralRequest</ref>
+                        </dataType>
+                        <doc></doc>
+                    </field>
+                </fields>
+            </request>
+            <response name="changeUserIntegral_result">
+                <fields>
+                    <field tag="0" name="success" optional="false" privacy="false">
+                        <dataType>
+                            <kind>INTEGER</kind>
+                        </dataType>
+                        <doc>
+
+### 记录积分改变流水
+
+#### 业务描述
+   用户因为完成一些游戏规则或者触犯游戏规则导致积分减少或者增加,调用该接口修改用户积分
+
+#### 接口依赖
+    无
+#### 边界异常说明
+    无
+
+#### 输入
+    1.user_request.ChangeIntegralRequest
+
+#### 前置检查
+    1.用户状态检查(已冻结,已拉黑,已逻辑删除的用户不能冻结)
+
+####  逻辑处理
+    1. 设置用户状态为 FREEZE
+
+#### 数据库变更
+    1. update user set integral = ?  where id = ${userId}
+    2. insert into integral_journal() values()
+
+####  事务处理
+    1. 无
+
+####  输出
+    1. i32 流水 Id
+</doc>
+                    </field>
+                </fields>
+            </response>
+            <isSoaTransactionProcess>false</isSoaTransactionProcess>
+        </method>
+    </methods>
+    <structs>
+        <struct namespace="com.today.api.user.request" name="LoginUserRequest">
+            <doc>
+
+ 用户登录请求体
+</doc>
+            <fields>
+                <field tag="1" name="passWord" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 密码
+</doc>
+                </field>
+                <field tag="2" name="telephone" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 电话号码
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.request" name="ModifyUserRequest">
+            <doc>
+
+ 修改用户请求体
+</doc>
+            <fields>
+                <field tag="1" name="email" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户邮箱
+</doc>
+                </field>
+                <field tag="2" name="qq" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 qq
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.response" name="LoginUserResponse">
+            <doc>
+
+ 用户登录返回体
+</doc>
+            <fields>
+                <field tag="1" name="userName" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户名称
+</doc>
+                </field>
+                <field tag="2" name="telephone" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 电话号码
+</doc>
+                </field>
+                <field tag="3" name="status" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.UserStatusEnum</ref>
+                    </dataType>
+                    <doc>
+
+ 用户状态
+</doc>
+                </field>
+                <field tag="4" name="email" optional="true" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户邮箱
+</doc>
+                </field>
+                <field tag="5" name="qq" optional="true" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 qq
+</doc>
+                </field>
+                <field tag="6" name="integral" optional="false" privacy="false">
+                    <dataType>
+                        <kind>INTEGER</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 积分
+</doc>
+                </field>
+                <field tag="7" name="createdAt" optional="false" privacy="false">
+                    <dataType>
+                        <kind>LONG</kind>
+                    </dataType>
+                    <doc>
+
+ 注册时间
+</doc>
+                </field>
+                <field tag="8" name="updatedAt" optional="false" privacy="false">
+                    <dataType>
+                        <kind>LONG</kind>
+                    </dataType>
+                    <doc>
+
+ 更新时间
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.request" name="FreezeUserRequest">
+            <doc>
+
+ 冻结操作请求体
+</doc>
+            <fields>
+                <field tag="1" name="userId" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 id
+</doc>
+                </field>
+                <field tag="2" name="remark" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+  操作员冻结备注
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.request" name="BlackUserRequest">
+            <doc>
+
+ 拉黑操作请求体
+</doc>
+            <fields>
+                <field tag="1" name="userId" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 id
+</doc>
+                </field>
+                <field tag="2" name="remark" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+  操作员拉黑备注
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.response" name="ModifyUserResponse">
+            <doc>
+
+ 修改用户返回体
+</doc>
+            <fields>
+                <field tag="1" name="userName" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户名称
+</doc>
+                </field>
+                <field tag="2" name="telephone" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 电话号码
+</doc>
+                </field>
+                <field tag="3" name="status" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.UserStatusEnum</ref>
+                    </dataType>
+                    <doc>
+
+ 用户状态
+</doc>
+                </field>
+                <field tag="4" name="email" optional="true" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户邮箱
+</doc>
+                </field>
+                <field tag="5" name="qq" optional="true" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 qq
+</doc>
+                </field>
+                <field tag="6" name="updatedAt" optional="false" privacy="false">
+                    <dataType>
+                        <kind>LONG</kind>
+                    </dataType>
+                    <doc>
+
+ 更新时间
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.request" name="RegisterUserRequest">
+            <doc>
+
+ 注册用户请求体
+</doc>
+            <fields>
+                <field tag="1" name="userName" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户名称
+</doc>
+                </field>
+                <field tag="2" name="passWord" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 密码
+</doc>
+                </field>
+                <field tag="3" name="telephone" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 电话号码
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.response" name="RegisterUserResponse">
+            <doc>
+
+ 注册用户返回体
+</doc>
+            <fields>
+                <field tag="1" name="userName" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户名称
+</doc>
+                </field>
+                <field tag="2" name="telephone" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 电话号码
+</doc>
+                </field>
+                <field tag="3" name="status" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.UserStatusEnum</ref>
+                    </dataType>
+                    <doc>
+
+ 用户状态
+</doc>
+                </field>
+                <field tag="4" name="createdAt" optional="false" privacy="false">
+                    <dataType>
+                        <kind>LONG</kind>
+                    </dataType>
+                    <doc>
+
+ 注册时间
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.response" name="BlackUserResponse">
+            <doc>
+
+ 拉黑操作返回体
+</doc>
+            <fields>
+                <field tag="1" name="userId" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 id
+</doc>
+                </field>
+                <field tag="2" name="status" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.UserStatusEnum</ref>
+                    </dataType>
+                    <doc>
+
+ 用户状态
+</doc>
+                </field>
+                <field tag="3" name="remark" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+  操作员冻结备注
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.response" name="FreezeUserResponse">
+            <doc>
+
+ 冻结操作返回体
+</doc>
+            <fields>
+                <field tag="1" name="userId" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 id
+</doc>
+                </field>
+                <field tag="2" name="status" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.UserStatusEnum</ref>
+                    </dataType>
+                    <doc>
+
+ 用户状态
+</doc>
+                </field>
+                <field tag="3" name="remark" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+  操作员冻结备注
+</doc>
+                </field>
+            </fields>
+        </struct>
+        <struct namespace="com.today.api.user.request" name="ChangeIntegralRequest">
+            <doc>
+
+ 记录请求流水接口
+</doc>
+            <fields>
+                <field tag="1" name="userId" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+ 用户 id
+</doc>
+                </field>
+                <field tag="2" name="integralPrice" optional="false" privacy="false">
+                    <dataType>
+                        <kind>STRING</kind>
+                    </dataType>
+                    <doc>
+
+  该流水涉及到的积分数(可正可负)
+</doc>
+                </field>
+                <field tag="3" name="integralType" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.IntegralTypeEnum</ref>
+                    </dataType>
+                    <doc>
+
+  积分流水类型
+</doc>
+                </field>
+                <field tag="4" name="integralSource" optional="false" privacy="false">
+                    <dataType>
+                        <kind>ENUM</kind>
+                        <ref>com.today.api.user.enums.IntegralSourceEnum</ref>
+                    </dataType>
+                    <doc>
+
+  积分改变的来源
+</doc>
+                </field>
+            </fields>
+        </struct>
+    </structs>
+    <enums>
+        <tenum namespace="com.today.api.user.enums" name="IntegralSourceEnum">
+            <doc>
+
+ 积分来源
+</doc>
+            <items>
+                <item>
+                    <label>PREFECT_INFORMATION</label>
+                    <value>1</value>
+                    <doc>
+
+ 完善个人资料
+</doc>
+                </item>
+                <item>
+                    <label>BLACK</label>
+                    <value>3</value>
+                    <doc>
+
+ 拉黑
+</doc>
+                </item>
+            </items>
+        </tenum>
+        <tenum namespace="com.today.api.user.enums" name="IntegralTypeEnum">
+            <doc>
+
+ 积分流水类型
+</doc>
+            <items>
+                <item>
+                    <label>ADD</label>
+                    <value>1</value>
+                    <doc>
+
+ 增加流水
+</doc>
+                </item>
+                <item>
+                    <label>MINUS</label>
+                    <value>2</value>
+                    <doc>
+
+ 减少流水
+</doc>
+                </item>
+            </items>
+        </tenum>
+        <tenum namespace="com.today.api.user.enums" name="UserStatusEnum">
+            <items>
+                <item>
+                    <label>ACTIVATED</label>
+                    <value>1</value>
+                    <doc>
+
+ 已激活
+</doc>
+                </item>
+                <item>
+                    <label>DATA_PERFECTED</label>
+                    <value>2</value>
+                    <doc>
+
+ 权属会员（资料已完善）
+</doc>
+                </item>
+                <item>
+                    <label>FREEZED</label>
+                    <value>3</value>
+                    <doc>
+
+ 冻结用户（涉嫌违规处理冻结期）
+</doc>
+                </item>
+                <item>
+                    <label>BLACK</label>
+                    <value>4</value>
+                    <doc>
+
+ 黑名单用户
+</doc>
+                </item>
+                <item>
+                    <label>DELETE</label>
+                    <value>99</value>
+                    <doc>
+
+ 逻辑删除
+</doc>
+                </item>
+            </items>
+        </tenum>
+    </enums>
+</service>
